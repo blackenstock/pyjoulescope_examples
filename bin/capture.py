@@ -87,8 +87,8 @@ def run():
         except Exception:
             # bad frequency selected, display warning & exit gracefully
             freqs = [f[2][0] for f in device.parameters('sampling_frequency').options]
-            print(f'Unsupported frequency selected: {args.frequency}', flush=True)
-            print(f'Supported frequencies = {freqs}', flush=True)
+            print(f'Unsupported frequency selected: {args.frequency}')
+            print(f'Supported frequencies = {freqs}')
             return 1
 
     with device:
@@ -101,7 +101,7 @@ def run():
             device.stream_process_register(recorder)
             t_stop = None if duration is None else time.time() + duration
             device.start()
-            print(f'Capturing data from {device}: type CTRL-C to stop', flush=True)
+            print(f'Capturing data from {device}: type CTRL-C to stop')
             while not quit_:
                 time.sleep(0.01)
                 if t_stop and time.time() > t_stop:
