@@ -87,16 +87,15 @@ def si_format(labels):
 import multiprocessing as mp
 def run():
     args = get_parser().parse_args()
-    #r = DataReader().open(args.input)
-    r = DataReader().open('d:/20220113_144116_testmode_current_pattern.jls')
+    r = DataReader().open(args.input)
+    #r = DataReader().open('20220113_144116_testmode_current_pattern.jls')
     #r = DataReader().open('d:/20220120_065401_eco_ro_3times_2msr.jls')
     #r = DataReader().open('d:/20220120_101230_eco_ro_3times_200ksr.jls')
     start_idx, stop_idx = r.sample_id_range
     d_idx = stop_idx - start_idx
     f = r.sampling_frequency
-    incr = d_idx // (d_idx // 50) #args.sample_count, see README_export_jls2png.md for evaluating the value
+    incr = d_idx // (d_idx // args.sample_count) #, see README_export_jls2png.md for evaluating the value
     data = r.data_get(start_idx, stop_idx, incr, units='samples')
-    print(data)
 
     # stat
     x = np.linspace(0.0, d_idx / f, len(data), dtype=np.float64)
@@ -115,10 +114,9 @@ def run():
     # lorawan tx: I_lower<peak<I
 
     # find peaks for each range and print list and mark with different color
-    #peak2s, peak_heights2s = find_peaks(xs, height=(0.0004, 0.002), distance=5)
-    #peak_lora_tx, peak_heights_lora_tx = find_peaks(xs, height=(0.024, 0.04))
-    peak_eco_readout, peak_height_eco_readout = find_peaks(xs, height=(0.38, 5),
-                                                           distance=150)  # 100us width > 200mA (this level is only reached from ECO peak): 100us/(1/sample_frequency)=100us/(1/2000000)=200 > 200/sample_count=200/i >
+    peak2s, peak_heights2s = find_peaks(xs, height=(0.0004, 0.002), distance=5)
+    peak_lora_tx, peak_heights_lora_tx = find_peaks(xs, height=(0.024, 0.04))
+    peak_eco_readout, peak_height_eco_readout = find_peaks(xs, height=(0.38, 5), distance=150)  # 100us width > 200mA (this level is only reached from ECO peak): 100us/(1/sample_frequency)=100us/(1/2000000)=200 > 200/sample_count=200/i >
     #region
     #cnt=0
     #for peak in peak2s:
